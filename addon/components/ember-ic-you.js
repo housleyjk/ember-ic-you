@@ -40,17 +40,6 @@ export default Component.extend({
   triggerDistance: 0,
 
   /**
-   Keeps state of page position relative to the component's
-   trigger `triggerDistance`
-
-   @property aboveTheTrigger
-   @type {Boolean}
-   @default false
-   */
-
-  aboveTheTrigger: false,
-
-  /**
    Selector for the scrolled container. If null, the container will be the window.
 
    @property scrollContainer
@@ -153,19 +142,16 @@ export default Component.extend({
 
   _listenerFired() {
     let scrollContainer = this.get('_scrollContainer'),
-        triggerDistance = this.get('triggerDistance'),
-        previousAboveTheTrigger = this.get('aboveTheTrigger');
+        triggerDistance = this.get('triggerDistance');
 
     let offsetFromTop = this.$().offset().top,
         scrollContainerPosition =  scrollContainer.scrollTop(),
         scrollContainerHeight = scrollContainer.height();
 
     let positionOfMe = offsetFromTop - scrollContainerPosition - scrollContainerHeight;
-    let aboveTheTrigger = ( positionOfMe <= triggerDistance );
 
-    if (aboveTheTrigger !== previousAboveTheTrigger) {
-      this.set('aboveTheTrigger', aboveTheTrigger);
-      run.debounce(this, 'sendAction', 'crossedTheLine', aboveTheTrigger, 50);
+    if ( positionOfMe <= triggerDistance ) {
+      run.debounce(this, 'sendAction', 'crossedTheLine', 50);
     }
   }
 });
